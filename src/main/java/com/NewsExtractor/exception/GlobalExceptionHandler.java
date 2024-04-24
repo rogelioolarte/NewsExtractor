@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.io.IOException;
-import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.http.HttpConnectTimeoutException;
 import java.util.HashMap;
 
 @ControllerAdvice
@@ -26,18 +27,6 @@ public class GlobalExceptionHandler {
         exception.getFieldErrors().forEach(error -> errors.put(error.getField(),
                 error.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errors);
-    }
-
-    @ExceptionHandler(value = {SocketException.class})
-    public ResponseEntity<?> handleSocketException(SocketException exception) {
-        return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
-                .body(exception.getMessage());
-    }
-
-    @ExceptionHandler(value = {IOException.class})
-    public ResponseEntity<?> handleIOException(IOException exception) {
-        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-                .body(exception.getMessage());
     }
 
 }

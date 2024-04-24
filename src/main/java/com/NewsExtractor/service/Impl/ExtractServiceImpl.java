@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,8 +22,9 @@ public class ExtractServiceImpl implements IExtractService {
     private final String generalAgentToUse = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 " +
             "Safari/537.36";
-    private final Connection session = Jsoup.newSession()
+    private final Connection session = Jsoup.newSession().timeout(2000)
             .userAgent(generalAgentToUse).ignoreHttpErrors(true);
+
     @Autowired
     private INewsPaperService newsPaperService;
     @Autowired
@@ -73,11 +75,19 @@ public class ExtractServiceImpl implements IExtractService {
 
     public Connection.Response obtainResponse(String source, List<Proxyy> proxyyList,
                                               Boolean useProxyy) throws IOException {
-        if (useProxyy && !proxyyList.isEmpty()) {
-            return session.newRequest(source).userAgent(generalAgentToUse)
-                    .proxy(proxyyService.returnOne(proxyyService.usefulProxy(proxyyList))).execute();
+        try {
+            if (useProxyy && !proxyyList.isEmpty()) {
+                return session.newRequest(source)
+                        .proxy(proxyyService.returnOne(proxyyService.usefulProxy(proxyyList))).execute();
+            }
+
+            return session.newRequest(source).execute();
         }
-        return session.newRequest(source).userAgent(generalAgentToUse).execute();
+        catch (SocketTimeoutException e){
+            // This will return a 404 error until a new update
+            return session.newRequest("https://reqres.in/api/unknown/23")
+                    .ignoreContentType(true).execute();
+        }
     }
 
     @Override

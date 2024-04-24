@@ -54,6 +54,13 @@ public class SectionServiceImpl implements ISectionService {
 
     public String sourceToName(String source) {
         String[] segments = URI.create(source).getPath().split("/");
-        return segments[1].contains("/") ? URI.create(source).getPath() : segments[1];
+        StringBuilder result = new StringBuilder();
+        for (int i = 1; i < segments.length; i++) {
+            result.append(segments[i]);
+            if (i < segments.length - 1) {
+                result.append("/");
+            }
+        }
+        return result.toString();
     }
 }

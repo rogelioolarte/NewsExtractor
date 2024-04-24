@@ -54,7 +54,7 @@ public class ManagmentServiceImpl implements IManagementService {
             executionTrace.append(extractService.getStrings(articles));
             extractService.setCounters(newsPaper);
             extractService.setSectionsCounters(newsPaper.getSectionList());
-            extractService.reCheckIds(newsPaper);
+//            extractService.reCheckIds(newsPaper);
             extractService.setNewsProgress(newsPaper, "Extraction Completed");
         }
         return executionTrace.toString();
