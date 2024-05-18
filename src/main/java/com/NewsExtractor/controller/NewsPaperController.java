@@ -1,7 +1,6 @@
 package com.NewsExtractor.controller;
 
 import com.NewsExtractor.dto.NewsPaperDTO;
-import com.NewsExtractor.dto.ProxyyDTO;
 import com.NewsExtractor.entity.NewsPaper;
 import com.NewsExtractor.exception.SpecificException;
 import com.NewsExtractor.service.IManagementService;

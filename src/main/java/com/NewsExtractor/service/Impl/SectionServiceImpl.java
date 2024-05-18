@@ -5,6 +5,7 @@ import com.NewsExtractor.persistence.ISectionDAO;
 import com.NewsExtractor.service.ISectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.util.List;
@@ -17,37 +18,44 @@ public class SectionServiceImpl implements ISectionService {
     private ISectionDAO sectionDAO;
 
     @Override
+    @Transactional
     public List<Section> findAll() {
         return sectionDAO.findAll();
     }
 
     @Override
+    @Transactional
     public Optional<Section> findById(Long id) {
         return sectionDAO.findById(id);
     }
 
     @Override
+    @Transactional
     public Optional<Section> findByName(String name) {
         return sectionDAO.findByName(name);
     }
 
     @Override
+    @Transactional
     public Optional<Section> findBySource(String source) {
         return sectionDAO.findBySource(source);
     }
 
     @Override
+    @Transactional
     public boolean existsBySource(String source) {
         return sectionDAO.existsBySource(source);
     }
 
     @Override
+    @Transactional
     public void save(Section section) {
         section.setName(sourceToName(section.getSource()));
         sectionDAO.save(section);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         sectionDAO.deleteById(id);
     }

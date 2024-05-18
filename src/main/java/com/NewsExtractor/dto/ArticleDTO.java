@@ -9,9 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

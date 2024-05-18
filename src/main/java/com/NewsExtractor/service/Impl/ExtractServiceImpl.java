@@ -4,7 +4,9 @@ import com.NewsExtractor.dto.StateDTO;
 import com.NewsExtractor.entity.*;
 import com.NewsExtractor.service.*;
 import org.jsoup.Connection;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
+import org.jsoup.UnsupportedMimeTypeException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.List;
@@ -83,7 +86,8 @@ public class ExtractServiceImpl implements IExtractService {
 
             return session.newRequest(source).execute();
         }
-        catch (SocketTimeoutException e){
+        catch (SocketTimeoutException | MalformedURLException |
+                HttpStatusException | UnsupportedMimeTypeException e){
             // This will return a 404 error until a new update
             return session.newRequest("https://reqres.in/api/unknown/23")
                     .ignoreContentType(true).execute();

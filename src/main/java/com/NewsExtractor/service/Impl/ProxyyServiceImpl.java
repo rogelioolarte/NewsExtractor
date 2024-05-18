@@ -7,6 +7,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -26,47 +27,54 @@ public class ProxyyServiceImpl implements IProxyyService {
     private IProxyyDAO proxyyDAO;
 
     @Override
+    @Transactional
     public List<Proxyy> findAll() {
         return proxyyDAO.findAll();
     }
 
     @Override
+    @Transactional
     public Optional<Proxyy> findById(Long id) {
         return proxyyDAO.findById(id);
     }
 
     @Override
+    @Transactional
     public Optional<Proxyy> findByName(String name) {
         return proxyyDAO.findByName(name);
     }
 
     @Override
+    @Transactional
     public boolean existsByName(String name) {
         return proxyyDAO.existsByName(name);
     }
 
     @Override
+    @Transactional
     public void save(Proxyy proxy) {
         proxyyDAO.save(proxy);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         proxyyDAO.deleteById(id);
     }
 
     @Override
+    @Transactional
     public String checkProxy(String source, Proxyy proxyy) throws IOException {
         Connection.Response response = session.newRequest(source)
                 .proxy(new Proxy(createType(proxyy.getType()),
                         new InetSocketAddress(proxyy.getAddress(), proxyy.getPort()))).execute();
-        System.out.println(response.statusCode());
         proxyy.setState(response.statusCode());
         save(proxyy);
         return "Proxy check completed";
     }
 
     @Override
+    @Transactional
     public String checkProxyList(String source, List<Proxyy> proxyyList) throws IOException {
         if (proxyyList.size() > 1) {
             for (Proxyy proxy : proxyyList) {
@@ -94,11 +102,13 @@ public class ProxyyServiceImpl implements IProxyyService {
     }
 
     @Override
+    @Transactional
     public List<Proxyy> usefulProxy(List<Proxyy> proxyyList) {
         return proxyyList.stream().filter(proxyy -> proxyy.getState() == 200).toList();
     }
 
     @Override
+    @Transactional
     public Proxy returnOne(List<Proxyy> proxyyList) {
         return proxyyList.stream()
                 .findFirst().isPresent() ?
